@@ -90,8 +90,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+-- Set to true if you have a Nerd Font installed and selected/set in the terminal
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -155,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 5
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -569,7 +569,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -782,6 +782,7 @@ require('lazy').setup({
     end,
   },
 
+  -- color schemes
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -789,15 +790,67 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
+    -- init = function()
+    --   -- Load the colorscheme here.
+    --   -- Like many other themes, this one has different styles, and you could load
+    --   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+    --   vim.cmd.colorscheme 'tokyonight-moon'
+
+    --   -- You can configure highlights by doing something like:
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
+  },
+
+  {
+    'marko-cerovac/material.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+  },
+
+  {
+    'sainnhe/edge',
+    priority = 1000,
+  },
+
+  {
+    'Shatur/neovim-ayu',
+    priority = 1000,
+  },
+
+  {
+    'Mofiqul/vscode.nvim',
+    priority = 1000,
     init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'vscode'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
+  },
+
+  {
+    'rmehri01/onenord.nvim',
+    priority = 1000,
+  },
+
+  {
+    'catppuccin/nvim',
+    priority = 1000,
+  },
+
+  {
+    'NTBBloodbath/doom-one.nvim',
+    priority = 1000,
+  },
+
+  {
+    'MetriC-DT/balance-theme.nvim',
+    priority = 1000,
+  },
+
+  -- Rember where file was last edited
+  {
+    'vladdoster/remember.nvim',
+    opts = {},
   },
 
   -- Highlight todo, notes, etc in comments
@@ -821,25 +874,53 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- -- Simple and easy statusline.
+      -- --  You could remove this setup call if you don't like it,
+      -- --  and try some other statusline plugin
+      -- local statusline = require 'mini.statusline'
+      -- -- set use_icons to true if you have a Nerd Font
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
 
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+      -- -- You can configure sections in the statusline by overriding their
+      -- -- default behavior. For example, here we set the section for
+      -- -- cursor location to LINE/LINES:COLUMN
+      -- -- https://neovim.io/doc/user/options.html#'statusline'
+      -- ---@diagnostic disable-next-line: duplicate-set-field
+      -- statusline.section_location = function()
+      --   return '%2l/%2L:%-2v'
+      -- end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
+  -- statusline
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      --local custom_nord = require 'lualine.themes.nord'
+      ---- Change the background of lualine_y section for normal mode
+      --custom_nord.normal.y.bg = '#112233'
+
+      require('lualine').setup {
+        options = {
+          theme = 'nord',
+        },
+        sections = {
+          --lualine_a = { 'mode' },
+          --lualine_b = { 'branch', 'diff', 'diagnostics' },
+          --lualine_c = { 'filename' },
+          lualine_x = {}, --lualine_x = { 'encoding', 'fileformat', 'filetype' },
+          lualine_y = { 'encoding', 'fileformat', 'filetype' }, -- lualine_y = { 'progress' },
+          -- https://neovim.io/doc/user/options.html#'statusline'
+          lualine_z = { '%l:%v/%L' }, --lualine_z = { 'location' },
+        },
+      }
+    end,
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -868,6 +949,16 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
+  -- remove trailing white space of touched lines
+  {
+    'svranesevic/spaceless.nvim',
+    config = function()
+      require('spaceless').setup {
+        ignore_filetypes = { 'markdown' },
+      }
     end,
   },
 
